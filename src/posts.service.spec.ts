@@ -6,17 +6,20 @@ describe('PostsService', () => {
     text: 'Mocked post',
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     postsService = new PostsService();
-
     postsService.create({ text: 'Some pre-existing post' });
   });
 
   it('should add a new post', () => {
-    // реализуйте тест-кейс
+    const initialPostsLength = postsService.posts.length;
+    postsService.create(post);
+    expect(postsService.posts.length).toBe(initialPostsLength + 1);
   });
 
   it('should find a post', () => {
-    // реализуйте тест-кейс
+    const createdPost = postsService.create(post);
+    const foundPost = postsService.find(createdPost.id);
+    expect(foundPost).toEqual(createdPost);
   });
 });
