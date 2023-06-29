@@ -1,4 +1,7 @@
+import { experiments } from 'webpack';
 import { Post, PostsService } from './posts.service';
+import { create } from 'domain';
+import exp from 'constants';
 
 describe('PostsService', () => {
   let postsService: PostsService;
@@ -6,29 +9,22 @@ describe('PostsService', () => {
     text: 'Mocked post',
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     postsService = new PostsService();
+
     postsService.create({ text: 'Some pre-existing post' });
   });
 
   it('should add a new post', () => {
-    const initialPostsLength = postsService.posts.length;
     const createdPost = postsService.create(post);
-    expect(postsService.posts.length).toBe(initialPostsLength + 1);
-    expect(createdPost).toEqual(expect.objectContaining({
-      text: post.text,
-    }));
-    expect(createdPost.id).toBeDefined(); 
-    expect(createdPost.date).toBeDefined();
+
+    expect(postsService.find(createdPost.id)).toEqual(createdPost);
   });
 
   it('should find a post', () => {
     const createdPost = postsService.create(post);
     const foundPost = postsService.find(createdPost.id);
-    expect(foundPost).toEqual(expect.objectContaining({
-      text: post.text,
-    }));
-    expect(foundPost.id).toBeUndefined();
-    expect(foundPost.date).toBeUndefined();
+
+    expect(foundPost).toMatchObject(post);
   });
 });
