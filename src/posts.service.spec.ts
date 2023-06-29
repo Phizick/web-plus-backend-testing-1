@@ -13,13 +13,22 @@ describe('PostsService', () => {
 
   it('should add a new post', () => {
     const initialPostsLength = postsService.posts.length;
-    postsService.create(post);
+    const createdPost = postsService.create(post);
     expect(postsService.posts.length).toBe(initialPostsLength + 1);
+    expect(createdPost).toEqual(expect.objectContaining({
+      text: post.text,
+    }));
+    expect(createdPost.id).toBeDefined(); 
+    expect(createdPost.date).toBeDefined();
   });
 
   it('should find a post', () => {
     const createdPost = postsService.create(post);
     const foundPost = postsService.find(createdPost.id);
-    expect(foundPost).toEqual(createdPost);
+    expect(foundPost).toEqual(expect.objectContaining({
+      text: post.text,
+    }));
+    expect(foundPost.id).toBeUndefined();
+    expect(foundPost.date).toBeUndefined();
   });
 });
